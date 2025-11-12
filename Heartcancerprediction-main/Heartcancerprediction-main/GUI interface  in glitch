@@ -1,0 +1,348 @@
+project link with gui----------https://heartcancerprobability.glitch.me/
+
+
+
+
+
+
+
+
+<--------------------------------------------------------index.html----------------------------------->
+
+create the folder template/.index.html
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+   
+
+    <style>
+      
+     body {
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        background-size: 100% 100%;
+      } 
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+      }
+
+      li {
+        float: right;
+      }
+
+      li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 12px;
+        text-decoration: none;
+      }
+
+      li a:hover {
+        background-color: blue;
+      }
+      body {
+        background-image:url('https://cdn.glitch.global/8f380e4d-2b6a-4aa5-bc05-bcef2c962f79/th%20(1).jpeg?v=1720500703574');
+        margin-bottom: 30px;
+        margin-right: 20px;
+        margin-left: 20px;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+        h1 {
+        color: white;
+        text-align: center;
+        font-size: 70px;
+      }
+      table {
+        border: 10px solid black;
+        font-size: 20px;
+        box-align: center;
+      }   </style>
+  </head>
+  <body>
+   
+    <div class="container">
+    <div class="page-header">
+      <h1>Heart cancer prediction</h1>
+    </div>
+
+    <form method="POST" id="predictForm">
+      <table bgcolor="skyblue">
+        <tr>
+          <td><h2>Health Card ...&#x270D;</h2></td>
+        </tr>
+       <tr>
+          <td></td>
+        </tr> 
+        <tr>
+          
+          <td>1. age</td>
+          <td><input type="text" name="age"/></td>
+        </tr>
+        <tr>
+          <td>2. gender (F=1 , M=0)</td>
+          <td><input type="text" name="gender" /></td>
+        </tr>
+        <tr>
+          <td>3. person's resting blood pressure(100-200 mm Hg)</td>
+          <td><input type="text" name="rbp"/></td>
+        </tr>
+        <tr>
+          <td>4. cholestrol(100-300)</td>
+          <td><input type="text" name="cholestrol" /></td>
+        </tr>
+        <tr>
+          <td>
+            5. resting electrocardiogram (0=normal, 1=having ST-T wave
+            abnormality)
+          </td>
+          <td><input type="text" name="recg" /></td>
+        </tr>
+        <tr>
+          <td>6. ecg (1=normal ECG , 0=aberrant ECG.)</td>
+          <td><input type="text" name="ecg" /></td>
+        </tr>
+        <tr>
+          <td>7. thalassemia(1,2,3)</td>
+          <td><input type="text" name="thalassemia" /></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            <input type="submit" value="  Probability... " />
+          </td>
+        </tr>
+      </table>
+      <div id="resultDiv" style="display: none; background-color: rgb(255, 0, 0,); color:yellow;" class="alert fade show text-center mt-5" role="alert">
+        <p id="result" class="form-label" style="margin: 0px"></p>
+      </div>
+    </form>
+       </div>
+    
+  <script>
+      document
+        .getElementById("predictForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const formData = new FormData(event.target);
+          const response = await fetch("/predict", {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+          document.getElementById("result").innerText =
+            "Heart Cancer : " + result.predict;
+          const resultDiv = document.getElementById("resultDiv");
+          resultDiv.style.display = "block";
+        });
+    </script>
+  </body>
+</html>
+
+
+
+# 2.create the another folder --------------------->  app.py------------------------------->
+ # main the work in flask and connect server
+
+from flask import * 
+import pandas as pd
+import numpy as np
+from  sklearn.linear_model import LinearRegression
+
+app = Flask(__name__) 
+url ='https://raw.githubusercontent.com/Akshat81172/Python-on-glitch-/main/heart.csv'
+stud_marks =  pd.read_csv(url)
+stud_marks1 = np.array(stud_marks)
+X = stud_marks1[:,0:7] 
+Y = stud_marks1[:,7]
+model = LinearRegression()
+model.fit(X,Y)
+  
+@app.route('/') 
+def hello_world(): 
+   return render_template('index.html')
+@app.route('/predict', methods=['POST']) 
+def processdata(): 
+  
+
+   age = int( request.form['age'] )
+   gender = int( request.form['gender'] )
+   rbp = int( request.form['rbp'] )
+   cholestrol  = int( request.form['cholestrol'] )
+   recg = int( request.form['recg'] )
+   ecg = int( request.form['ecg'] )
+   thalassemia = int( request.form['thalassemia'] )
+   arr1 = np.array([[age , gender, rbp, cholestrol,recg ,ecg, thalassemia]])
+   res= model.predict(arr1)
+    
+   return jsonify({"predict":str(res[0])})
+
+if __name__ == '__main__': 
+  app.run()
+
+  
+ 3.--------------------------> requirements.txt---------------------------------------> 
+  flask
+pandas
+numpy
+scikit-learn
+
+4------------------------->starts.sh------------------------------>
+python app.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
